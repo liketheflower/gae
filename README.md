@@ -1,7 +1,8 @@
-Modified GAE code and the original README can be found below. Modified part are given below:
+Modified GAE
+============
+
+The original README can be found below. Modified part are given below:
 - make the code can run under tensorflow 2.0 
-
-
 
 
 
