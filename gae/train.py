@@ -69,8 +69,11 @@ if DEBUG:
     print(f"test_edges_false type, {type(test_edges_false)}")
     print(f"len val edges false, {len(val_edges_false)}")
     print(f"len test edges false, {len(test_edges_false)}")
-    print(f"val_edges_false[:10], {val_edges_false[:10]}")
-    print(f"test_edges_false[:10] type, {test_edges_false[:10]}")
+    print('*'*20)
+    print(f"val_edges[:20], {val_edges[:20]}")
+    print(f"test_edges[:20] type, {test_edges[:20]}")
+    print(f"val_edges_false[:20], {val_edges_false[:20]}")
+    print(f"test_edges_false[:20] type, {test_edges_false[:20]}")
     print('*'*20)
     
     print(f"train_edges[:2], {train_edges[:2]}")
