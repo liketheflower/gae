@@ -20,7 +20,7 @@ from gae.optimizer import OptimizerAE, OptimizerVAE
 from gae.input_data import load_data
 from gae.model import GCNModelAE, GCNModelVAE
 from gae.preprocessing import preprocess_graph, construct_feed_dict, sparse_to_tuple, mask_test_edges
-
+DEBUG = True
 # Settings
 flags = tf.app.flags
 FLAGS = flags.FLAGS
@@ -40,13 +40,40 @@ dataset_str = FLAGS.dataset
 
 # Load data
 adj, features = load_data(dataset_str)
-
+if DEBUG:
+    print(f"adj type, {type(adj)}")
+    print(f"adj.shape, {adj.shape}")
+    print(f"adj[:10,:10], {adj[:10, :10]}")
+    print(f"adj {adj}")
+    print(f"feature.shape, {features.shape}")
 # Store original adjacency matrix (without diagonal entries) for later
 adj_orig = adj
 adj_orig = adj_orig - sp.dia_matrix((adj_orig.diagonal()[np.newaxis, :], [0]), shape=adj_orig.shape)
+if DEBUG:
+    print(f"ad_orig type, {type(adj_orig)}")
+    print(f"adj_orig.shape, {adj_orig.shape}")
+
 adj_orig.eliminate_zeros()
 
 adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj)
+if DEBUG:
+    print(f"adj_train type, {type(adj_train)}")
+    print(f"adj_train shape, {type(adj_train.shape)}")
+    print(f"train_edges type, {type(train_edges)}")
+    print('*'*20)
+    print(f"train_edges shape, {train_edges.shape}")
+    print(f"val_edges shape, {val_edges.shape}")
+    print(f"test_edges shape, {test_edges.shape}")
+    print('*'*20)
+    print(f"val_edges_false type, {type(val_edges_false)}")
+    print(f"test_edges_false type, {type(test_edges_false)}")
+    print(f"len val edges false, {len(val_edges_false)}")
+    print(f"len test edges false, {len(test_edges_false)}")
+    print(f"val_edges_false[:10], {val_edges_false[:10]}")
+    print(f"test_edges_false[:10] type, {test_edges_false[:10]}")
+    print('*'*20)
+    
+    print(f"train_edges[:2], {train_edges[:2]}")
 adj = adj_train
 
 if FLAGS.features == 0:
