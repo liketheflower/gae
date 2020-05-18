@@ -29,7 +29,7 @@ def construct_feed_dict(adj_normalized, adj, features, placeholders):
     return feed_dict
 
 
-def mask_test_edges(adj):
+def mask_test_edges(adj, random_seed=None):
     # Function to build test set with 10% positive links
     # NOTE: Splits are randomized and results might slightly deviate from reported numbers in the paper.
     # TODO: Clean up.
@@ -48,6 +48,8 @@ def mask_test_edges(adj):
     num_val = int(np.floor(edges.shape[0] / 20.))
 
     all_edge_idx = list(range(edges.shape[0]))
+    if random_seed is not None:
+        np.random.seed(random_seed)
     np.random.shuffle(all_edge_idx)
     val_edge_idx = all_edge_idx[:num_val]
     test_edge_idx = all_edge_idx[num_val:(num_val + num_test)]

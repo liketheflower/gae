@@ -55,7 +55,7 @@ if DEBUG:
 
 adj_orig.eliminate_zeros()
 
-adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj)
+adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj, random_seed=42)
 if DEBUG:
     print(f"adj_train type, {type(adj_train)}")
     print(f"adj_train shape, {type(adj_train.shape)}")
