@@ -3,7 +3,8 @@ Modified GAE
 
 The original README can be found below. Modified part are given below:
 - make the code can run under tensorflow 2.0 
-
+- fix the val, test splitting method by using a fixed random seed during the random number generation process.
+- Before fix, two runs we will have different val and test data as shown in [this log](./gae/train_debug.txt)
 
 
 Graph Auto-Encoders
