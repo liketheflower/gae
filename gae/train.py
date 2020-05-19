@@ -3,6 +3,9 @@ from __future__ import print_function
 
 import time
 import os
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 # Train on CPU (hide GPU) due to memory constraints
 os.environ['CUDA_VISIBLE_DEVICES'] = ""
