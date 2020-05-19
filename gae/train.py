@@ -131,7 +131,15 @@ sess.run(tf.global_variables_initializer())
 
 cost_val = []
 acc_val = []
-
+def vis_a(a, x_label='epoch',y_label='loss', name=None,save_a=True):
+    if save_a:
+        np.save('./outputs/'+name+'.npy', np.array(a))
+    plt.plot(a)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(name)
+    plt.savefig(name+'.png')
+    plt.close()
 
 def get_roc_score(edges_pos, edges_neg, emb=None):
     if emb is None:
@@ -162,10 +170,12 @@ def get_roc_score(edges_pos, edges_neg, emb=None):
 
     return roc_score, ap_score
 
+train_loss = []
+train_acc = []
+val_loss = []
 
-cost_val = []
-acc_val = []
-val_roc_score = []
+val_roc = []
+val_ap = []
 
 adj_label = adj_train + sp.eye(adj_train.shape[0])
 adj_label = sparse_to_tuple(adj_label)
@@ -183,17 +193,23 @@ for epoch in range(FLAGS.epochs):
     # Compute average loss
     avg_cost = outs[1]
     avg_accuracy = outs[2]
-
+    train_loss.append(avg_cost)
+    train_acc.append(avg_accuracy)
     roc_curr, ap_curr = get_roc_score(val_edges, val_edges_false)
-    val_roc_score.append(roc_curr)
-
+    val_roc.append(roc_curr)
+    val_ap.append(ap_curr)
+    
+    
     print("Epoch:", '%04d' % (epoch + 1), "train_loss=", "{:.5f}".format(avg_cost),
-          "train_acc=", "{:.5f}".format(avg_accuracy), "val_roc=", "{:.5f}".format(val_roc_score[-1]),
+          "train_acc=", "{:.5f}".format(avg_accuracy), "val_roc=", "{:.5f}".format(val_roc[-1]),
           "val_ap=", "{:.5f}".format(ap_curr),
           "time=", "{:.5f}".format(time.time() - t))
 
 print("Optimization Finished!")
-
+save_a(train_loss, 'epoch','loss','train_loss_tf_gae_200')
+save_a(train_acc, 'epoch','accuracy','train_accuracy_tf_gae_200')
+save_a(val_roc, 'epoch','roc','val_roc_tf_gae_200')
+save_a(val_ap, 'epoch','ap','val_ap_tf_gae_200')
 roc_score, ap_score = get_roc_score(test_edges, test_edges_false)
 print('Test ROC score: ' + str(roc_score))
 print('Test AP score: ' + str(ap_score))
