@@ -13,6 +13,7 @@ os.environ['CUDA_VISIBLE_DEVICES'] = ""
 #import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
+from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import scipy.sparse as sp
 
@@ -36,7 +37,7 @@ flags.DEFINE_float('dropout', 0., 'Dropout rate (1 - keep probability).')
 
 flags.DEFINE_string('model', 'gcn_ae', 'Model string.')
 flags.DEFINE_string('dataset', 'cora', 'Dataset string.')
-flags.DEFINE_string('tflogs', 'cora', 'Dataset string.')
+flags.DEFINE_string('tflog', '/home/ioannis/repos/vgae_logs/', 'tflog.')
 flags.DEFINE_integer('features', 1, 'Whether to use features (1) or not (0).')
 
 model_str = FLAGS.model
@@ -188,7 +189,9 @@ val_ap = []
 
 adj_label = adj_train + sp.eye(adj_train.shape[0])
 adj_label = sparse_to_tuple(adj_label) 
-writer = tf.summary.create_file_writer(tflogs)
+#writer = tf.summary.create_file_writer(tflogs)
+#writer = tf.summary.FileWriter(tflogs)
+writer = SummaryWriter(log_dir=tflogs)
 # Train model
 for epoch in range(FLAGS.epochs):
 
