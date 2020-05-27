@@ -36,11 +36,17 @@ flags.DEFINE_float('dropout', 0., 'Dropout rate (1 - keep probability).')
 
 flags.DEFINE_string('model', 'gcn_ae', 'Model string.')
 flags.DEFINE_string('dataset', 'cora', 'Dataset string.')
+flags.DEFINE_string('tflogs', 'cora', 'Dataset string.')
 flags.DEFINE_integer('features', 1, 'Whether to use features (1) or not (0).')
 
 model_str = FLAGS.model
 dataset_str = FLAGS.dataset
-
+from datetime import datetime
+current_time = datetime.now().strftime('%b%d_%H-%M-%S')
+tflogs =FLAGS.tflog +current_time+"original_tf"+'/'
+if not os.path.exists(tflogs):
+    os.makedirs(tflogs)
+    
 # Load data
 adj, features = load_data(dataset_str)
 if DEBUG:
@@ -181,8 +187,8 @@ val_roc = []
 val_ap = []
 
 adj_label = adj_train + sp.eye(adj_train.shape[0])
-adj_label = sparse_to_tuple(adj_label)
-
+adj_label = sparse_to_tuple(adj_label) 
+writer = tf.summary.create_file_writer(tflogs)
 # Train model
 for epoch in range(FLAGS.epochs):
 
@@ -201,7 +207,12 @@ for epoch in range(FLAGS.epochs):
     roc_curr, ap_curr = get_roc_score(val_edges, val_edges_false)
     val_roc.append(roc_curr)
     val_ap.append(ap_curr)
-    
+    #with train_summary_writer.as_default():
+    #tf.summary.scalar('loss', train_loss.result(), step=epoch)
+    #train_summary_writer
+    writer.add_scalar('Loss/train',avg_cost , epoch)
+    writer.add_scalar('ROC/val', roc_curr , epoch)
+    writer.add_scalar('AP/val',ap_curr , epoch)
     
     print("Epoch:", '%04d' % (epoch + 1), "train_loss=", "{:.5f}".format(avg_cost),
           "train_acc=", "{:.5f}".format(avg_accuracy), "val_roc=", "{:.5f}".format(val_roc[-1]),
